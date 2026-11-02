@@ -4,7 +4,7 @@ Streamlit multi-page app for Colombo Stock Exchange analysis
 """
 
 import streamlit as st
-from pages import pump_detector, daily_briefing
+from views import pump_detector, daily_briefing
 
 # Configure page
 st.set_page_config(

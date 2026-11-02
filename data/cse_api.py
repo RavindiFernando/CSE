@@ -26,7 +26,7 @@ def get_top_gainers() -> List[Dict]:
     Returns list of stocks with highest percentage gain.
     """
     try:
-        response = requests.get(
+        response = requests.post(
             f"{BASE_URL}topGainers",
             headers=HEADERS,
             timeout=10
@@ -46,7 +46,7 @@ def get_top_losers() -> List[Dict]:
     Returns list of stocks with highest percentage loss.
     """
     try:
-        response = requests.get(
+        response = requests.post(
             f"{BASE_URL}topLooses",
             headers=HEADERS,
             timeout=10
@@ -66,7 +66,7 @@ def get_most_active_stocks() -> List[Dict]:
     Returns list of stocks by total volume traded.
     """
     try:
-        response = requests.get(
+        response = requests.post(
             f"{BASE_URL}mostActiveTrades",
             headers=HEADERS,
             timeout=10
@@ -85,7 +85,7 @@ def get_all_sectors() -> List[Dict]:
     Fetch all CSE sector performance.
     """
     try:
-        response = requests.get(
+        response = requests.post(
             f"{BASE_URL}allSectors",
             headers=HEADERS,
             timeout=10
@@ -104,7 +104,7 @@ def get_daily_market_summary() -> Dict:
     Fetch overall market summary (ASPI, S&P SL20).
     """
     try:
-        response = requests.get(
+        response = requests.post(
             f"{BASE_URL}dailyMarketSummery",
             headers=HEADERS,
             timeout=10
@@ -143,7 +143,7 @@ def get_approved_announcements() -> List[Dict]:
     Fetch recent company announcements.
     """
     try:
-        response = requests.get(
+        response = requests.post(
             f"{BASE_URL}approvedAnnouncement",
             headers=HEADERS,
             timeout=10
@@ -162,7 +162,7 @@ def get_trade_summary() -> List[Dict]:
     Fetch all securities trade summary.
     """
     try:
-        response = requests.get(
+        response = requests.post(
             f"{BASE_URL}tradeSummary",
             headers=HEADERS,
             timeout=10

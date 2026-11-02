@@ -98,23 +98,33 @@ def analyze_stock(symbol: str, tip_message: str = ""):
         announcements = cse_api.get_announcements_for_symbol(symbol)
         announcement_subjects = [a.get("subject", "") for a in announcements]
         
+        # Check if we have historical data
+        has_history = not history_df.empty and len(history_df) >= 5
+        if not has_history:
+            st.warning(
+                "⚠️ 30-day historical data not available for this stock. "
+                "Volume spike detection will be less accurate."
+            )
+
         # Perform pump analysis with AI
         pump_result = None
         if groq_client.is_ai_configured():
             with st.spinner("Running AI analysis..."):
-                avg_30d_volume = volume_spike.get("avg_volume", 0) or 1
-                volume_spike_ratio = volume_spike.get("spike_ratio", 1) or 1
-                
+                # Use actual values if available, otherwise use 0 and note in prompt
+                avg_30d_volume = volume_spike.get("avg_volume") or 0
+                volume_spike_ratio = volume_spike.get("spike_ratio") or 0
+
                 pump_result = groq_client.analyze_pump(
                     symbol=symbol,
                     company_name=company_name,
                     current_price=current_price,
                     price_change_pct=price_change_pct,
                     today_volume=today_volume,
-                    avg_30d_volume=float(avg_30d_volume),
-                    volume_spike_ratio=float(volume_spike_ratio),
+                    avg_30d_volume=float(avg_30d_volume) if avg_30d_volume else 0,
+                    volume_spike_ratio=float(volume_spike_ratio) if volume_spike_ratio else 0,
                     recent_announcements=announcement_subjects[:5],
-                    tip_message=tip_message
+                    tip_message=tip_message,
+                    has_history=has_history
                 )
         
         # Display results

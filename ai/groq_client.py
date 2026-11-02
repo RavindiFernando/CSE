@@ -46,7 +46,8 @@ def analyze_pump(
     avg_30d_volume: float,
     volume_spike_ratio: float,
     recent_announcements: List[str],
-    tip_message: str = ""
+    tip_message: str = "",
+    has_history: bool = True
 ) -> Dict:
     """
     Use Groq to analyze if a stock shows signs of pump-and-dump.
@@ -69,6 +70,8 @@ def analyze_pump(
         }
 
     try:
+        history_note = "" if has_history else "\n⚠️ NOTE: 30-day historical data is NOT available for this stock (not listed on Yahoo Finance).\nJudge volume spike based on Today's Volume absolute size and trading context only."
+
         prompt = f"""You are a CSE (Colombo Stock Exchange) market analyst specialising in detecting pump-and-dump schemes in small-cap Sri Lankan stocks.
 
 Analyse this stock and determine if it shows signs of a coordinated pump-and-dump.
@@ -79,10 +82,10 @@ STOCK DATA:
 - Current Price: Rs. {current_price:.2f}
 - Today's Change: {price_change_pct:+.2f}%
 - Today's Volume: {today_volume:,} shares
-- 30-day Average Volume: {avg_30d_volume:,.0f} shares
-- Volume Spike Ratio: {volume_spike_ratio:.1f}x normal volume
+- 30-day Average Volume: {avg_30d_volume:,.0f} shares if available, else "Unknown"
+- Volume Spike Ratio: {volume_spike_ratio:.1f}x normal volume if available, else "Unknown"
 - Recent Official Announcements: {recent_announcements or "None found"}
-- Tip Message Received: {tip_message or "None provided"}
+- Tip Message Received: {tip_message or "None provided"}{history_note}
 
 PUMP-AND-DUMP SIGNALS TO CHECK:
 1. Volume spike > 3x normal with no official announcement = HIGH RISK
